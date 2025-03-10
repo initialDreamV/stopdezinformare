@@ -58,8 +58,11 @@
         .article-view {
             display: none;
             background: white;
-            padding: 20px;
+            padding: 40px;
             border-radius: 5px;
+            max-width: 80%;
+            margin: 0 auto;
+            overflow-y: auto;
         }
         .article-view button {
             margin-top: 20px;
@@ -133,6 +136,11 @@
                 .then(data => {
                     document.getElementById("article-content").innerHTML = data;
                     document.getElementById("article-view").style.display = "block";
+                    // Add additional CSS to make the article content larger
+                    document.getElementById("article-content").style.fontSize = "1.5em";
+                    document.getElementById("article-content").style.lineHeight = "1.8em";
+                    document.getElementById("article-content").style.padding = "20px";
+                    document.getElementById("article-content").style.maxWidth = "90%";
                 })
                 .catch(error => {
                     console.error("Error loading article:", error);
@@ -149,3 +157,4 @@
     </script>
 </body>
 </html>
+
