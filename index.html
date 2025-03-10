@@ -91,10 +91,11 @@
         }
 
         .main-content {
-            flex: 2;
+            flex: 3;
             background: var(--article-bg);
             padding: 20px;
             border-radius: 5px;
+            transition: width 0.3s ease-in-out;
         }
 
         .news-article {
@@ -118,6 +119,11 @@
             background: var(--article-bg);
             padding: 20px;
             border-radius: 5px;
+            flex: 3;
+        }
+
+        .article-view.active {
+            display: block;
         }
 
         .article-view button {
@@ -149,7 +155,7 @@
     </div>
 
     <div class="container">
-        <div class="main-content">
+        <div class="main-content" id="main-content">
             <h2>Latest News</h2>
             <div id="news-container"></div>
         </div>
@@ -187,6 +193,8 @@
         }
 
         function openArticle(file) {
+            document.getElementById("main-content").style.flex = "3"; // Keep Latest News box wide
+
             fetch(`articles/${file}`)
                 .then(response => {
                     if (!response.ok) throw new Error('Article not found!');
@@ -194,7 +202,7 @@
                 })
                 .then(data => {
                     document.getElementById("article-content").innerHTML = data;
-                    document.getElementById("article-view").style.display = "block";
+                    document.getElementById("article-view").classList.add("active");
                 })
                 .catch(error => {
                     document.getElementById("article-content").innerHTML = "<p>Error loading article.</p>";
@@ -202,7 +210,7 @@
         }
 
         function closeArticle() {
-            document.getElementById("article-view").style.display = "none";
+            document.getElementById("article-view").classList.remove("active");
         }
 
         function searchNews() {
@@ -221,11 +229,7 @@
             let isDark = document.body.classList.contains("dark-mode");
             let darkModeButton = document.getElementById("dark-mode-toggle");
             
-            if (isDark) {
-                darkModeButton.innerText = "Light Mode";
-            } else {
-                darkModeButton.innerText = "Dark Mode";
-            }
+            darkModeButton.innerText = isDark ? "Light Mode" : "Dark Mode";
 
             localStorage.setItem("darkMode", isDark);
         }
