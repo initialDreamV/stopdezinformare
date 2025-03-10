@@ -35,12 +35,17 @@
             max-width: 1000px;
             margin: 20px auto;
             gap: 20px;
+            transition: width 0.3s ease-in-out;
         }
         .main-content {
             flex: 2;
             background: white;
             padding: 20px;
             border-radius: 5px;
+            transition: width 0.3s ease-in-out;
+        }
+        .expanded {
+            width: 80% !important; /* Make it wider when article is opened */
         }
         .news-article {
             border-bottom: 1px solid #ddd;
@@ -60,9 +65,9 @@
             background: white;
             padding: 20px;
             border-radius: 10px;
-            width: 90%; /* Larger box */
-            height: 80vh; /* Taller box */
-            margin: 5vh auto; /* Centering */
+            width: 90%;
+            height: 80vh;
+            margin: 5vh auto;
             overflow-y: auto;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
@@ -87,7 +92,7 @@
     </nav>
 
     <div class="container">
-        <div class="main-content">
+        <div class="main-content" id="main-content">
             <h2>Latest News</h2>
             <div id="news-container"></div>
         </div>
@@ -111,7 +116,8 @@
         function loadCategory(category) {
             const newsContainer = document.getElementById("news-container");
             newsContainer.innerHTML = "";
-            document.getElementById("article-view").style.display = "none"; // Hide full article view initially
+            document.getElementById("article-view").style.display = "none"; 
+            document.getElementById("main-content").classList.remove("expanded"); // Reset width
 
             newsCategories[category].forEach(article => {
                 const articleElement = document.createElement("div");
@@ -137,9 +143,7 @@
                 .then(data => {
                     document.getElementById("article-content").innerHTML = data;
                     document.getElementById("article-view").style.display = "block";
-                    document.getElementById("article-content").style.fontSize = "1.2em"; // Moderate font size
-                    document.getElementById("article-content").style.lineHeight = "1.6em";
-                    document.getElementById("article-content").style.padding = "20px";
+                    document.getElementById("main-content").classList.add("expanded"); // Make wider
                 })
                 .catch(error => {
                     console.error("Error loading article:", error);
@@ -149,10 +153,11 @@
         }
 
         function closeArticle() {
-            document.getElementById("article-view").style.display = "none"; // Hide article view
+            document.getElementById("article-view").style.display = "none";
+            document.getElementById("main-content").classList.remove("expanded"); // Reset width
         }
 
-        loadCategory('home'); // Load the home category initially
+        loadCategory('home'); 
     </script>
 </body>
 </html>
