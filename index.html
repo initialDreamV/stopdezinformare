@@ -5,62 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Program</title>
     <style>
-        :root {
-            --bg-color: #f4f4f4;
-            --text-color: #000;
-            --header-bg: #333;
-            --nav-bg: #444;
-            --article-bg: white;
-            --button-bg: #007BFF;
-            --button-text: white;
-        }
-
-        body.dark-mode {
-            --bg-color: #1e1e1e;
-            --text-color: #f4f4f4;
-            --header-bg: #222;
-            --nav-bg: #333;
-            --article-bg: #2c2c2c;
-            --button-bg: #f4f4f4;
-            --button-text: #000;
-        }
-
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: 0.3s ease-in-out;
+            background-color: #f4f4f4;
         }
-
         header {
-            background: var(--header-bg);
+            background: #333;
             color: white;
             padding: 15px;
             text-align: center;
             font-size: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
-
-        #dark-mode-toggle {
-            background: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            padding: 8px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-
         nav {
-            background: var(--nav-bg);
+            background: #444;
             padding: 10px;
             text-align: center;
         }
-
         nav a {
             color: white;
             margin: 0 15px;
@@ -68,80 +30,59 @@
             font-size: 18px;
             cursor: pointer;
         }
-
-        .search-bar {
-            text-align: center;
-            margin: 10px 0;
-        }
-
-        #search-input {
-            padding: 10px;
-            width: 80%;
-            max-width: 400px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
         .container {
             display: flex;
             max-width: 1000px;
             margin: 20px auto;
             gap: 20px;
+            transition: width 0.3s ease-in-out;
         }
-
         .main-content {
-            flex: 3;
-            background: var(--article-bg);
+            flex: 2;
+            background: white;
             padding: 20px;
             border-radius: 5px;
             transition: width 0.3s ease-in-out;
         }
-
+        .expanded {
+            width: 80% !important; /* Make it wider when article is opened */
+        }
         .news-article {
             border-bottom: 1px solid #ddd;
             padding: 15px 0;
         }
-
         .news-article h3 {
             margin: 0;
             cursor: pointer;
-            color: var(--button-bg);
+            color: #007BFF;
         }
-
         .news-article p {
             margin: 5px 0;
             color: #555;
         }
-
         .article-view {
             display: none;
-            background: var(--article-bg);
+            background: white;
             padding: 20px;
-            border-radius: 5px;
-            flex: 3;
+            border-radius: 10px;
+            width: 90%;
+            height: 80vh;
+            margin: 5vh auto;
+            overflow-y: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-
-        .article-view.active {
-            display: block;
-        }
-
         .article-view button {
             margin-top: 20px;
             padding: 10px;
-            background: var(--button-bg);
-            color: var(--button-text);
+            background: #007BFF;
+            color: white;
             border: none;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <header>
-        <span>News Program</span>
-        <button id="dark-mode-toggle">Dark Mode</button>
-    </header>
-    
+    <header>News Program</header>
     <nav>
         <a onclick="loadCategory('home')">Home</a>
         <a onclick="loadCategory('world')">World</a>
@@ -149,10 +90,6 @@
         <a onclick="loadCategory('business')">Business</a>
         <a onclick="loadCategory('technology')">Technology</a>
     </nav>
-
-    <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search news..." onkeyup="searchNews()">
-    </div>
 
     <div class="container">
         <div class="main-content" id="main-content">
@@ -171,15 +108,16 @@
         const newsCategories = {
             home: [{ title: "General News Update", preview: "Latest news across all categories...", file: "home.html" }],
             world: [{ title: "Global Events", preview: "Major global events...", file: "world.html" }],
-            politics: [{ title: "New Policy Introduced", preview: "Government unveils new policy...", file: "Politics/global-politics.html" }],
-            business: [{ title: "Stock Market Trends", preview: "Markets reacting to new developments...", file: "Business/stock-market.html" }],
-            technology: [{ title: "Tech Breakthroughs", preview: "New innovations in AI...", file: "Technology/ai-breakthrough.html" }]
+            politics: [{ title: "New Policy Introduced", preview: "Government unveils new policy...", file: "politics.html" }],
+            business: [{ title: "Stock Market Trends", preview: "Markets reacting to new developments...", file: "business.html" }],
+            technology: [{ title: "Tech Breakthroughs", preview: "New innovations in AI...", file: "technology.html" }]
         };
 
         function loadCategory(category) {
             const newsContainer = document.getElementById("news-container");
             newsContainer.innerHTML = "";
-            document.getElementById("article-view").style.display = "none";
+            document.getElementById("article-view").style.display = "none"; 
+            document.getElementById("main-content").classList.remove("expanded"); // Reset width
 
             newsCategories[category].forEach(article => {
                 const articleElement = document.createElement("div");
@@ -193,57 +131,33 @@
         }
 
         function openArticle(file) {
-            document.getElementById("main-content").style.flex = "3"; // Keep Latest News box wide
-
+            console.log(`Attempting to load article: ${file}`);
             fetch(`articles/${file}`)
                 .then(response => {
-                    if (!response.ok) throw new Error('Article not found!');
+                    if (!response.ok) {
+                        console.error('Error: Article not found!');
+                        throw new Error('Article not found!');
+                    }
                     return response.text();
                 })
                 .then(data => {
                     document.getElementById("article-content").innerHTML = data;
-                    document.getElementById("article-view").classList.add("active");
+                    document.getElementById("article-view").style.display = "block";
+                    document.getElementById("main-content").classList.add("expanded"); // Make wider
                 })
                 .catch(error => {
-                    document.getElementById("article-content").innerHTML = "<p>Error loading article.</p>";
+                    console.error("Error loading article:", error);
+                    document.getElementById("article-content").innerHTML = "<p>Error loading article. Please try again later.</p>";
+                    document.getElementById("article-view").style.display = "block";
                 });
         }
 
         function closeArticle() {
-            document.getElementById("article-view").classList.remove("active");
+            document.getElementById("article-view").style.display = "none";
+            document.getElementById("main-content").classList.remove("expanded"); // Reset width
         }
 
-        function searchNews() {
-            let input = document.getElementById("search-input").value.toLowerCase();
-            let articles = document.getElementsByClassName("news-article");
-
-            for (let article of articles) {
-                let title = article.getElementsByTagName("h3")[0].innerText.toLowerCase();
-                let preview = article.getElementsByTagName("p")[0].innerText.toLowerCase();
-                article.style.display = (title.includes(input) || preview.includes(input)) ? "block" : "none";
-            }
-        }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
-            let isDark = document.body.classList.contains("dark-mode");
-            let darkModeButton = document.getElementById("dark-mode-toggle");
-            
-            darkModeButton.innerText = isDark ? "Light Mode" : "Dark Mode";
-
-            localStorage.setItem("darkMode", isDark);
-        }
-
-        window.onload = function() {
-            let isDark = localStorage.getItem("darkMode") === "true";
-            if (isDark) {
-                document.body.classList.add("dark-mode");
-                document.getElementById("dark-mode-toggle").innerText = "Light Mode";
-            }
-            loadCategory('home');
-        };
-
-        document.getElementById("dark-mode-toggle").addEventListener("click", toggleDarkMode);
+        loadCategory('home'); 
     </script>
 </body>
 </html>
