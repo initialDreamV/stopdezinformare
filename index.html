@@ -58,11 +58,13 @@
         .article-view {
             display: none;
             background: white;
-            padding: 40px;
-            border-radius: 5px;
-            max-width: 80%;
-            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%; /* Larger box */
+            height: 80vh; /* Taller box */
+            margin: 5vh auto; /* Centering */
             overflow-y: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         .article-view button {
             margin-top: 20px;
@@ -123,8 +125,7 @@
         }
 
         function openArticle(file) {
-            console.log(`Attempting to load article: ${file}`); // Debugging log
-            // Fetch the content of the article (HTML file) from the 'articles' folder
+            console.log(`Attempting to load article: ${file}`);
             fetch(`articles/${file}`)
                 .then(response => {
                     if (!response.ok) {
@@ -136,11 +137,9 @@
                 .then(data => {
                     document.getElementById("article-content").innerHTML = data;
                     document.getElementById("article-view").style.display = "block";
-                    // Add additional CSS to make the article content larger
-                    document.getElementById("article-content").style.fontSize = "1.5em";
-                    document.getElementById("article-content").style.lineHeight = "1.8em";
+                    document.getElementById("article-content").style.fontSize = "1.2em"; // Moderate font size
+                    document.getElementById("article-content").style.lineHeight = "1.6em";
                     document.getElementById("article-content").style.padding = "20px";
-                    document.getElementById("article-content").style.maxWidth = "90%";
                 })
                 .catch(error => {
                     console.error("Error loading article:", error);
@@ -157,4 +156,3 @@
     </script>
 </body>
 </html>
-
