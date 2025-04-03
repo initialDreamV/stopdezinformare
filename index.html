@@ -45,7 +45,7 @@
             align-items: center;
         }
 
-        #dark-mode-toggle {
+        #dark-mode-toggle, #toggle-google-search {
             background: var(--button-bg);
             color: var(--button-text);
             border: none;
@@ -53,6 +53,7 @@
             cursor: pointer;
             border-radius: 5px;
             transition: 0.3s;
+            margin-left: 10px;
         }
 
         nav {
@@ -76,8 +77,8 @@
 
         #search-input {
             padding: 10px;
-            width: 80%;
-            max-width: 400px;
+            width: 70%;
+            max-width: 350px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
@@ -88,7 +89,6 @@
             max-width: 1000px;
             margin: 20px auto;
             gap: 20px;
-            transition: width 0.3s ease-in-out;
         }
 
         .main-content {
@@ -96,11 +96,6 @@
             background: var(--article-bg);
             padding: 20px;
             border-radius: 5px;
-            transition: width 0.3s ease-in-out;
-        }
-
-        .expanded {
-            width: 80% !important; /* Make it wider when article is opened */
         }
 
         .news-article {
@@ -139,6 +134,11 @@
             border: none;
             cursor: pointer;
         }
+
+        #google-search-container {
+            display: none;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -157,6 +157,11 @@
 
     <div class="search-bar">
         <input type="text" id="search-input" placeholder="Search news..." onkeyup="searchNews()">
+        <button id="toggle-google-search">Search</button>
+        <div id="google-search-container">
+            <script async src="https://cse.google.com/cse.js?cx=f754499fdc31341f7"></script>
+            <div class="gcse-search"></div>
+        </div>
     </div>
 
     <div class="container">
@@ -165,7 +170,6 @@
             <div id="news-container"></div>
         </div>
 
-        <!-- Full Article View (Initially Hidden) -->
         <div class="article-view" id="article-view">
             <div id="article-content"></div>
             <button onclick="closeArticle()">Back to News</button>
@@ -184,45 +188,30 @@
         function loadCategory(category) {
             const newsContainer = document.getElementById("news-container");
             newsContainer.innerHTML = "";
-            document.getElementById("article-view").style.display = "none"; 
-            document.getElementById("main-content").classList.remove("expanded"); // Reset width
 
             newsCategories[category].forEach(article => {
                 const articleElement = document.createElement("div");
                 articleElement.classList.add("news-article");
-                articleElement.innerHTML = `
-                    <h3 onclick="openArticle('${article.file}')">${article.title}</h3>
-                    <p>${article.preview}</p>
-                `;
+                articleElement.innerHTML = `<h3 onclick="openArticle('${article.file}')">${article.title}</h3><p>${article.preview}</p>`;
                 newsContainer.appendChild(articleElement);
             });
         }
 
         function openArticle(file) {
-            console.log(`Attempting to load article: ${file}`);
             fetch(`articles/${file}`)
-                .then(response => {
-                    if (!response.ok) {
-                        console.error('Error: Article not found!');
-                        throw new Error('Article not found!');
-                    }
-                    return response.text();
-                })
+                .then(response => response.ok ? response.text() : Promise.reject("Article not found"))
                 .then(data => {
                     document.getElementById("article-content").innerHTML = data;
                     document.getElementById("article-view").style.display = "block";
-                    document.getElementById("main-content").classList.add("expanded"); // Make wider
                 })
                 .catch(error => {
-                    console.error("Error loading article:", error);
-                    document.getElementById("article-content").innerHTML = "<p>Error loading article. Please try again later.</p>";
+                    document.getElementById("article-content").innerHTML = "<p>Error loading article.</p>";
                     document.getElementById("article-view").style.display = "block";
                 });
         }
 
         function closeArticle() {
             document.getElementById("article-view").style.display = "none";
-            document.getElementById("main-content").classList.remove("expanded"); // Reset width
         }
 
         function searchNews() {
@@ -238,24 +227,19 @@
 
         function toggleDarkMode() {
             document.body.classList.toggle("dark-mode");
-            let isDark = document.body.classList.contains("dark-mode");
-            let darkModeButton = document.getElementById("dark-mode-toggle");
-            
-            darkModeButton.innerText = isDark ? "Light Mode" : "Dark Mode";
-
-            localStorage.setItem("darkMode", isDark);
+            document.getElementById("dark-mode-toggle").innerText = document.body.classList.contains("dark-mode") ? "Light Mode" : "Dark Mode";
+            localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
         }
 
+        document.getElementById("toggle-google-search").addEventListener("click", function () {
+            let googleSearch = document.getElementById("google-search-container");
+            googleSearch.style.display = googleSearch.style.display === "none" ? "block" : "none";
+        });
+
         window.onload = function() {
-            let isDark = localStorage.getItem("darkMode") === "true";
-            if (isDark) {
-                document.body.classList.add("dark-mode");
-                document.getElementById("dark-mode-toggle").innerText = "Light Mode";
-            }
+            if (localStorage.getItem("darkMode") === "true") toggleDarkMode();
             loadCategory('home');
         };
-
-        document.getElementById("dark-mode-toggle").addEventListener("click", toggleDarkMode);
     </script>
 </body>
 </html>
