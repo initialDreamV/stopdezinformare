@@ -45,7 +45,7 @@
             align-items: center;
         }
 
-        #dark-mode-toggle, #toggle-google-search {
+        #dark-mode-toggle {
             background: var(--button-bg);
             color: var(--button-text);
             border: none;
@@ -53,21 +53,36 @@
             cursor: pointer;
             border-radius: 5px;
             transition: 0.3s;
-            margin-left: 10px;
         }
 
         nav {
             background: var(--nav-bg);
             padding: 10px;
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
         }
 
         nav a {
             color: white;
-            margin: 0 15px;
             text-decoration: none;
             font-size: 18px;
             cursor: pointer;
+        }
+
+        #toggle-google-search {
+            background: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
         }
 
         .search-bar {
@@ -77,8 +92,8 @@
 
         #search-input {
             padding: 10px;
-            width: 70%;
-            max-width: 350px;
+            width: 80%;
+            max-width: 400px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
@@ -148,20 +163,23 @@
     </header>
 
     <nav>
-        <a onclick="loadCategory('home')">Home</a>
-        <a onclick="loadCategory('world')">World</a>
-        <a onclick="loadCategory('politics')">Politics</a>
-        <a onclick="loadCategory('business')">Business</a>
-        <a onclick="loadCategory('technology')">Technology</a>
+        <div class="nav-links">
+            <a onclick="loadCategory('home')">Home</a>
+            <a onclick="loadCategory('world')">World</a>
+            <a onclick="loadCategory('politics')">Politics</a>
+            <a onclick="loadCategory('business')">Business</a>
+            <a onclick="loadCategory('technology')">Technology</a>
+        </div>
+        <button id="toggle-google-search">Search</button>
     </nav>
+
+    <div id="google-search-container">
+        <script async src="https://cse.google.com/cse.js?cx=f754499fdc31341f7"></script>
+        <div class="gcse-search"></div>
+    </div>
 
     <div class="search-bar">
         <input type="text" id="search-input" placeholder="Search news..." onkeyup="searchNews()">
-        <button id="toggle-google-search">Search</button>
-        <div id="google-search-container">
-            <script async src="https://cse.google.com/cse.js?cx=f754499fdc31341f7"></script>
-            <div class="gcse-search"></div>
-        </div>
     </div>
 
     <div class="container">
@@ -225,19 +243,12 @@
             }
         }
 
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
-            document.getElementById("dark-mode-toggle").innerText = document.body.classList.contains("dark-mode") ? "Light Mode" : "Dark Mode";
-            localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-        }
-
         document.getElementById("toggle-google-search").addEventListener("click", function () {
             let googleSearch = document.getElementById("google-search-container");
             googleSearch.style.display = googleSearch.style.display === "none" ? "block" : "none";
         });
 
         window.onload = function() {
-            if (localStorage.getItem("darkMode") === "true") toggleDarkMode();
             loadCategory('home');
         };
     </script>
