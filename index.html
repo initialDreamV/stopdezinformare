@@ -5,7 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Split Button Page with Dark Mode</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
+    #response {
+        margin-top: 20px;
+        padding: 10px;
+        min-height: 50px;
+        border-radius: 8px;
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+    #response h3 {
+        color: #333;
+        font-size: 1.2em;
+    }
+    #response strong {
+        color: #d9534f;
+    }
+    #response ul {
+        padding-left: 20px;
+    }
+    #response li {
+        margin-bottom: 5px;
+    }
     .button-animate {
       transition: all 0.3s ease;
     }
@@ -30,17 +51,26 @@
     
     .dark-mode .left-button {
       background-color: #60a5fa;
-      color: black;
+      color: white;
     }
     
     .dark-mode .right-button {
       background-color: #4a59de;
-      color: black;
+      color: white;
     }
     
     .dark-mode .toggle-button {
       background-color: white;
       color: black;
+    }
+    
+    .dark-mode #response {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    
+    .dark-mode #response h3 {
+      color: #e5e7eb;
     }
     
     /* Light mode styles */
@@ -50,11 +80,11 @@
     }
     
     .light-mode .left-side {
-      background-color: #f3f3f6;
+      background-color: #f3f4f6;
     }
     
     .light-mode .right-side {
-      background-color: #e6ecec;
+      background-color: #e5e7eb;
     }
     
     .light-mode .left-button {
@@ -75,6 +105,65 @@
     /* Smooth transitions */
     body, .left-side, .right-side, .left-button, .right-button, .toggle-button {
       transition: all 0.3s ease;
+    }
+    
+    .chatbot-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 500px;
+      padding: 20px;
+      gap: 15px;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: #5e6ce2;
+    }
+    
+    .dark-mode .form-group input {
+      background-color: #374151;
+      border-color: #4b5563;
+      color: white;
+    }
+    
+    .dark-mode .form-group input:focus {
+      border-color: #60a5fa;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-success {
+      background-color: #16a34a;
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background-color: #15803d;
+      transform: translateY(-2px);
+    }
+    
+    .chatbot-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -102,28 +191,25 @@
 
   <!-- Right Side -->
   <div class="w-1/2 right-side flex items-center justify-center">
-    <button class="w-36 h-12 right-button rounded-full text-lg button-animate">
+    <button id="rightButton" class="w-36 h-12 right-button rounded-full text-lg button-animate" onclick="showChatbot()">
       Fact-Check
     </button>
+    <div id="chatbotContainer" class="hidden chatbot-container">
+      <h2>Free ChatBot</h2>
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          id="userInput"
+          placeholder="Enter your question"
+          onkeypress="handleKeyPress(event)" />
+      </div>
+      <button class="btn btn-success" onclick="sendMessage()">Ask!</button>
+      <div id="response"></div>
+    </div>
   </div>
 
   <script>
-    function loadCategory(category) {
-        const newsContainer = document.getElementById("news-container");
-        newsContainer.innerHTML = "";
-
-        newsCategories[category].forEach(article => {
-            const articleElement = document.createElement("div");
-            articleElement.classList.add("news-article");
-            articleElement.innerHTML = `<h3 onclick="openArticle('${article.file}')">${article.title}</h3><p>${article.preview}</p>`;
-            newsContainer.appendChild(articleElement);
-        });
-    }
-
-    document.getElementById("toggle-google-search").addEventListener("click", function () {
-        let searchContainer = document.getElementById("google-search-container");
-        searchContainer.classList.toggle("show-search");
-    });
     function toggleTheme() {
       const body = document.body;
       const toggleBtn = document.getElementById("themeToggle");
@@ -147,6 +233,55 @@
       
       leftButton.style.display = "none";
       searchContainer.classList.remove("hidden");
+    }
+    
+    function showChatbot() {
+      const rightButton = document.getElementById("rightButton");
+      const chatbotContainer = document.getElementById("chatbotContainer");
+      
+      rightButton.style.display = "none";
+      chatbotContainer.classList.remove("hidden");
+    }
+    
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+    
+    async function sendMessage() {
+      const input = document.getElementById('userInput').value;
+      const responseDiv = document.getElementById('response');
+      if (!input) {
+        responseDiv.innerHTML = 'Please enter a message.';
+        return;
+      }
+      responseDiv.innerHTML = 'Loading...';
+      try {
+        const response = await fetch(
+          'https://openrouter.ai/api/v1/chat/completions',
+          {
+            method: 'POST',
+            headers: {
+              Authorization: 'Bearer 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',
+              'HTTP-Referer': 'https://www.sitename.com',
+              'X-Title': 'SiteName',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: 'deepseek/deepseek-v3:free',
+              messages: [{ role: 'user', content: input }],
+            }),
+          },
+        );
+        const data = await response.json();
+        console.log(data);
+        const markdownText =
+          data.choices?.[0]?.message?.content || 'No response received.';
+        responseDiv.innerHTML = marked.parse(markdownText);
+      } catch (error) {
+        responseDiv.innerHTML = 'Error: ' + error.message;
+      }
     }
   </script>
 </body>
