@@ -252,35 +252,52 @@
     async function sendMessage() {
       const input = document.getElementById('userInput').value;
       const responseDiv = document.getElementById('response');
-      if (!input) {
+      
+      if (!input.trim()) {
         responseDiv.innerHTML = 'Please enter a message.';
         return;
       }
+      
       responseDiv.innerHTML = 'Loading...';
+      
       try {
         const response = await fetch(
           'https://openrouter.ai/api/v1/chat/completions',
           {
             method: 'POST',
             headers: {
-              Authorization: 'Bearer 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',
+              'Authorization': 'Bearer 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',
               'HTTP-Referer': 'https://www.sitename.com',
               'X-Title': 'SiteName',
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               model: 'deepseek/deepseek-v3:free',
-              messages: [{ role: 'user', content: input }],
+              messages: [{ role: 'user', content: input.trim() }],
             }),
           },
         );
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
-        console.log(data);
-        const markdownText =
-          data.choices?.[0]?.message?.content || 'No response received.';
+        console.log('API Response:', data);
+        
+        if (data.error) {
+          throw new Error(data.error.message || 'API returned an error');
+        }
+        
+        const markdownText = data.choices?.[0]?.message?.content || 'No response received.';
         responseDiv.innerHTML = marked.parse(markdownText);
+        
+        // Clear the input after successful response
+        document.getElementById('userInput').value = '';
+        
       } catch (error) {
-        responseDiv.innerHTML = 'Error: ' + error.message;
+        console.error('Error details:', error);
+        responseDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
       }
     }
   </script>
