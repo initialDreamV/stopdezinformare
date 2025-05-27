@@ -1,216 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Program</title>
-    <style>
-        :root {
-            --bg-color: #121212;
-            --text-color: #fff;
-            --header-bg: #1f1f1f;
-            --nav-bg: #252525;
-            --article-bg: #181818;
-            --button-bg: #0d6efd;
-            --button-text: white;
-            --hover-bg: #0b5ed7;
-            --search-bg: #222;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        header {
-            background: var(--header-bg);
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 22px;
-            font-weight: bold;
-        }
-
-        #dark-mode-toggle {
-            background: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            padding: 8px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-
-        #dark-mode-toggle:hover {
-            background: var(--hover-bg);
-        }
-
-        nav {
-            background: var(--nav-bg);
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 10px;
-            transition: color 0.3s ease, background 0.3s ease;
-            border-radius: 5px;
-        }
-
-        nav a:hover {
-            background: var(--hover-bg);
-            color: white;
-        }
-
-        #toggle-google-search {
-            background: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-
-        #toggle-google-search:hover {
-            background: var(--hover-bg);
-        }
-
-        #google-search-container {
-            display: none;
-            background: var(--search-bg);
-            padding: 15px;
-            text-align: center;
-            border-radius: 10px;
-            max-width: 600px;
-            margin: 10px auto;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .show-search {
-            display: block !important;
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
-
-        .container {
-            display: flex;
-            max-width: 1000px;
-            margin: 20px auto;
-            gap: 20px;
-        }
-
-        .main-content {
-            flex: 2;
-            background: var(--article-bg);
-            padding: 20px;
-            border-radius: 5px;
-        }
-
-        .news-article {
-            border-bottom: 1px solid #333;
-            padding: 15px 0;
-        }
-
-        .news-article h3 {
-            margin: 0;
-            cursor: pointer;
-            color: var(--button-bg);
-            transition: color 0.3s;
-        }
-
-        .news-article h3:hover {
-            color: var(--hover-bg);
-        }
-
-        .news-article p {
-            margin: 5px 0;
-            color: #aaa;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Split Button Page with Dark Mode</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .button-animate {
+      transition: all 0.3s ease;
+    }
+    .button-animate:hover {
+      opacity: 0.5;
+      transform: scale(1.2);
+    }
+    
+    /* Custom dark mode styles */
+    .dark-mode {
+      background-color: #000000;
+      color: white;
+    }
+    
+    .dark-mode .left-side {
+      background-color: #1f2937;
+    }
+    
+    .dark-mode .right-side {
+      background-color: #374151;
+    }
+    
+    .dark-mode .left-button {
+      background-color: #60a5fa;
+      color: black;
+    }
+    
+    .dark-mode .right-button {
+      background-color: #4ade80;
+      color: black;
+    }
+    
+    .dark-mode .toggle-button {
+      background-color: white;
+      color: black;
+    }
+    
+    /* Light mode styles */
+    .light-mode {
+      background-color: white;
+      color: black;
+    }
+    
+    .light-mode .left-side {
+      background-color: #f3f4f6;
+    }
+    
+    .light-mode .right-side {
+      background-color: #e5e7eb;
+    }
+    
+    .light-mode .left-button {
+      background-color: #2563eb;
+      color: white;
+    }
+    
+    .light-mode .right-button {
+      background-color: #16a34a;
+      color: white;
+    }
+    
+    .light-mode .toggle-button {
+      background-color: #111827;
+      color: white;
+    }
+    
+    /* Smooth transitions */
+    body, .left-side, .right-side, .left-button, .right-button, .toggle-button {
+      transition: all 0.3s ease;
+    }
+  </style>
 </head>
-<body>
-    <header>
-        <span>News Program</span>
-        <button id="dark-mode-toggle">Dark Mode</button>
-    </header>
 
-    <nav>
-        <div class="nav-links">
-            <a onclick="loadCategory('home')">Home</a>
-            <a onclick="loadCategory('world')">World</a>
-            <a onclick="loadCategory('politics')">Politics</a>
-            <a onclick="loadCategory('business')">Business</a>
-            <a onclick="loadCategory('technology')">Technology</a>
-        </div>
-        <button id="toggle-google-search">Search</button>
-    </nav>
+<body class="h-screen m-0 flex light-mode">
+  <!-- Toggle Button -->
+  <button
+    id="themeToggle"
+    class="absolute top-4 right-4 px-4 py-2 rounded-full toggle-button"
+    onclick="toggleTheme()"
+  >
+    Dark Mode
+  </button>
 
-    <div id="google-search-container">
-        <script async src="https://cse.google.com/cse.js?cx=f754499fdc31341f7"></script>
-        <div class="gcse-search"></div>
+  <!-- Left Side -->
+  <div class="w-1/2 left-side flex items-center justify-center">
+    <button id="leftButton" class="w-24 h-24 left-button rounded-full text-lg button-animate" onclick="showSearchEngine()">
+      Left
+    </button>
+    <div id="searchContainer" class="hidden w-full max-w-md px-4">
+      <script async src="https://cse.google.com/cse.js?cx=27ec22407a7c84408"></script>
+      <div class="gcse-search" data-resultsUrl="" data-newWindow="false" data-linktarget="_self"></div>
     </div>
+  </div>
 
-    <div class="container">
-        <div class="main-content" id="main-content">
-            <h2>Latest News</h2>
-            <div id="news-container"></div>
-        </div>
-    </div>
+  <!-- Right Side -->
+  <div class="w-1/2 right-side flex items-center justify-center">
+    <button class="w-24 h-24 right-button rounded-full text-lg button-animate">
+      Right
+    </button>
+  </div>
 
-    <script>
-        const newsCategories = {
-            home: [{ title: "General News Update", preview: "Latest news across all categories...", file: "home.html" }],
-            world: [{ title: "Global Events", preview: "Major global events...", file: "world.html" }],
-            politics: [{ title: "New Policy Introduced", preview: "Government unveils new policy...", file: "politics.html" }],
-            business: [{ title: "Stock Market Trends", preview: "Markets reacting to new developments...", file: "business.html" }],
-            technology: [{ title: "Tech Breakthroughs", preview: "New innovations in AI...", file: "technology.html" }]
-        };
+  <script>
+    function loadCategory(category) {
+        const newsContainer = document.getElementById("news-container");
+        newsContainer.innerHTML = "";
 
-        function loadCategory(category) {
-            const newsContainer = document.getElementById("news-container");
-            newsContainer.innerHTML = "";
-
-            newsCategories[category].forEach(article => {
-                const articleElement = document.createElement("div");
-                articleElement.classList.add("news-article");
-                articleElement.innerHTML = `<h3 onclick="openArticle('${article.file}')">${article.title}</h3><p>${article.preview}</p>`;
-                newsContainer.appendChild(articleElement);
-            });
-        }
-
-        document.getElementById("toggle-google-search").addEventListener("click", function () {
-            let searchContainer = document.getElementById("google-search-container");
-            searchContainer.classList.toggle("show-search");
+        newsCategories[category].forEach(article => {
+            const articleElement = document.createElement("div");
+            articleElement.classList.add("news-article");
+            articleElement.innerHTML = `<h3 onclick="openArticle('${article.file}')">${article.title}</h3><p>${article.preview}</p>`;
+            newsContainer.appendChild(articleElement);
         });
+    }
+    
+    document.getElementById("toggle-google-search").addEventListener("click", function () {
+        let searchContainer = document.getElementById("google-search-container");
+        searchContainer.classList.toggle("show-search");
+    });
+    function toggleTheme() {
+      const body = document.body;
+      const toggleBtn = document.getElementById("themeToggle");
+      
+      if (body.classList.contains("light-mode")) {
+        // Switch to dark mode
+        body.classList.remove("light-mode");
+        body.classList.add("dark-mode");
+        toggleBtn.textContent = "Light Mode";
+      } else {
+        // Switch to light mode
+        body.classList.remove("dark-mode");
+        body.classList.add("light-mode");
+        toggleBtn.textContent = "Dark Mode";
+      }
+    }
 
-        document.getElementById("dark-mode-toggle").addEventListener("click", function () {
-            document.body.classList.toggle("dark-mode");
-        });
-
-        window.onload = function() {
-            loadCategory('home');
-        };
-    </script>
+    function showSearchEngine() {
+      const leftButton = document.getElementById("leftButton");
+      const searchContainer = document.getElementById("searchContainer");
+      
+      leftButton.style.display = "none";
+      searchContainer.classList.remove("hidden");
+    }
+  </script>
 </body>
 </html>
