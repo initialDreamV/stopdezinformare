@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Split Button Page with Dark Mode</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
   <style>
     .button-animate {
       transition: all 0.3s ease;
@@ -80,6 +81,16 @@
     body, .left-side, .right-side, .left-button, .right-button, .toggle-button {
       transition: all 0.3s ease;
     }
+
+    /* Chatbot container styling */
+    #chatbot-container {
+      width: 100%;
+      height: 80%;
+      max-width: 500px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
   </style>
 </head>
 
@@ -106,9 +117,10 @@
 
   <!-- Right Side -->
   <div class="w-1/2 right-side flex items-center justify-center">
-    <button class="w-36 h-12 right-button rounded-full text-lg button-animate">
+    <button id="rightButton" class="w-36 h-12 right-button rounded-full text-lg button-animate" onclick="showChatbot()">
       Fact-Check
     </button>
+    <div id="chatbot-container" class="hidden"></div>
   </div>
 
   <script>
@@ -129,6 +141,7 @@
         let searchContainer = document.getElementById("google-search-container");
         searchContainer.classList.toggle("show-search");
     });
+
     function toggleTheme() {
       const body = document.body;
       const toggleBtn = document.getElementById("themeToggle");
@@ -152,6 +165,24 @@
 
       leftButton.style.display = "none";
       searchContainer.classList.remove("hidden");
+    }
+
+    function showChatbot() {
+      const rightButton = document.getElementById("rightButton");
+      const chatbotContainer = document.getElementById("chatbot-container");
+
+      rightButton.style.display = "none";
+      chatbotContainer.classList.remove("hidden");
+      
+      // Load the chatbot script if it hasn't been loaded yet
+      if (!window.chatbotLoaded) {
+        const script = document.createElement('script');
+        script.src = 'https://karabo.ai/smart-js-chatbot-link/4cbf5384-80ca-4873-a125-4c108935b169/';
+        script.onload = function() {
+          window.chatbotLoaded = true;
+        };
+        document.head.appendChild(script);
+      }
     }
   </script>
 </body>
