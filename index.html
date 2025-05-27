@@ -261,36 +261,53 @@
       responseDiv.innerHTML = 'Loading...';
       
       try {
-        const response = await fetch(
-          'https://openrouter.ai/api/v1/chat/completions',
-          {
-            method: 'POST',
-            headers: {
-              'Authorization': 'Bearer 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',
-              'HTTP-Referer': 'https://www.sitename.com',
-              'X-Title': 'SiteName',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              model: 'deepseek/deepseek-v3-base:free',
-              messages: [{ role: 'user', content: input.trim() }],
-            }),
+        // GitHub Models API endpoint
+        const endpoint = "https://models.github.ai/inference";
+        const model = "openai/gpt-4.1";
+        const token = "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"; // Replace with your GitHub token
+        
+        const response = await fetch(`${endpoint}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
           },
-        );
+          body: JSON.stringify({
+            messages: [
+              { 
+                role: "system", 
+                content: "You are a helpful assistant." 
+              },
+              { 
+                role: "user", 
+                content: input.trim() 
+              }
+            ],
+            temperature: 1.0,
+            top_p: 1.0,
+            model: model
+          })
+        });
         
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(`HTTP ${response.status}: ${errorData.error?.message || response.statusText}`);
         }
         
         const data = await response.json();
-        console.log('API Response:', data);
+        console.log('GitHub Models API Response:', data);
         
         if (data.error) {
           throw new Error(data.error.message || 'API returned an error');
         }
         
-        const markdownText = data.choices?.[0]?.message?.content || 'No response received.';
-        responseDiv.innerHTML = marked.parse(markdownText);
+        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+          throw new Error('Invalid response format from API');
+        }
+        
+        const messageContent = data.choices[0].message.content || 'No response received.';
+        responseDiv.innerHTML = marked.parse(messageContent);
         
         // Clear the input after successful response
         document.getElementById('userInput').value = '';
