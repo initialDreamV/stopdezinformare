@@ -120,7 +120,10 @@
     <button id="rightButton" class="w-36 h-12 right-button rounded-full text-lg button-animate" onclick="showChatbot()">
       Fact-Check
     </button>
-    <div id="chatbot-container" class="hidden"></div>
+    <div id="chatbot-container" class = "hidden w-full max-w-md px-4"></div>
+    <script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
+    <script src="https://karabo.ai/smart-js-chatbot-link/4cbf5384-80ca-4873-a125-4c108935b169/"></script>
+    
   </div>
 
   <script>
@@ -173,16 +176,6 @@
 
       rightButton.style.display = "none";
       chatbotContainer.classList.remove("hidden");
-      
-      // Load the chatbot script if it hasn't been loaded yet
-      if (!window.chatbotLoaded) {
-        const script = document.createElement('script');
-        script.src = 'https://karabo.ai/smart-js-chatbot-link/4cbf5384-80ca-4873-a125-4c108935b169/';
-        script.onload = function() {
-          window.chatbotLoaded = true;
-        };
-        document.head.appendChild(script);
-      }
     }
   </script>
 </body>
