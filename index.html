@@ -5,28 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Split Button Page with Dark Mode</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-    #response {
-        margin-top: 20px;
-        padding: 10px;
-        min-height: 50px;
-        border-radius: 8px;
-        background-color: rgba(0, 0, 0, 0.05);
-    }
-    #response h3 {
-        color: #333;
-        font-size: 1.2em;
-    }
-    #response strong {
-        color: #d9534f;
-    }
-    #response ul {
-        padding-left: 20px;
-    }
-    #response li {
-        margin-bottom: 5px;
-    }
     .button-animate {
       transition: all 0.3s ease;
     }
@@ -34,136 +13,72 @@
       opacity: 0.5;
       transform: scale(1.2);
     }
-    
+
     /* Custom dark mode styles */
     .dark-mode {
       background-color: #000000;
       color: white;
     }
-    
+
     .dark-mode .left-side {
       background-color: #1f2937;
     }
-    
+
     .dark-mode .right-side {
       background-color: #374151;
     }
-    
+
     .dark-mode .left-button {
       background-color: #60a5fa;
-      color: white;
+      color: black;
     }
-    
+
     .dark-mode .right-button {
+      background-color: #4ade80;
       background-color: #4a59de;
-      color: white;
+      color: black;
     }
-    
+
     .dark-mode .toggle-button {
       background-color: white;
       color: black;
     }
-    
-    .dark-mode #response {
-      background-color: rgba(255, 255, 255, 0.1);
-      color: white;
-    }
-    
-    .dark-mode #response h3 {
-      color: #e5e7eb;
-    }
-    
+
     /* Light mode styles */
     .light-mode {
       background-color: white;
       color: black;
     }
-    
+
     .light-mode .left-side {
       background-color: #f3f4f6;
+      background-color: #f3f3f6;
     }
-    
+
     .light-mode .right-side {
       background-color: #e5e7eb;
+      background-color: #e6ecec;
     }
-    
+
     .light-mode .left-button {
       background-color: #2563eb;
       color: white;
     }
-    
+
     .light-mode .right-button {
+      background-color: #16a34a;
       background-color: #5e6ce2;
       color: white;
     }
-    
+
     .light-mode .toggle-button {
       background-color: #111827;
       color: white;
     }
-    
+
     /* Smooth transitions */
     body, .left-side, .right-side, .left-button, .right-button, .toggle-button {
       transition: all 0.3s ease;
-    }
-    
-    .chatbot-container {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 500px;
-      padding: 20px;
-      gap: 15px;
-    }
-    
-    .form-group input {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #ddd;
-      border-radius: 8px;
-      font-size: 16px;
-      transition: border-color 0.3s;
-    }
-    
-    .form-group input:focus {
-      outline: none;
-      border-color: #5e6ce2;
-    }
-    
-    .dark-mode .form-group input {
-      background-color: #374151;
-      border-color: #4b5563;
-      color: white;
-    }
-    
-    .dark-mode .form-group input:focus {
-      border-color: #60a5fa;
-    }
-    
-    .btn {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-success {
-      background-color: #16a34a;
-      color: white;
-    }
-    
-    .btn-success:hover {
-      background-color: #15803d;
-      transform: translateY(-2px);
-    }
-    
-    .chatbot-container h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 24px;
-      font-weight: bold;
     }
   </style>
 </head>
@@ -180,6 +95,8 @@
 
   <!-- Left Side -->
   <div class="w-1/2 left-side flex items-center justify-center">
+    <button id="leftButton" class="w-24 h-24 left-button rounded-full text-lg button-animate" onclick="showSearchEngine()">
+      Left
     <button id="leftButton" class="w-36 h-12 left-button rounded-full text-lg button-animate" onclick="showSearchEngine()">
       Search
     </button>
@@ -191,29 +108,35 @@
 
   <!-- Right Side -->
   <div class="w-1/2 right-side flex items-center justify-center">
-    <button id="rightButton" class="w-36 h-12 right-button rounded-full text-lg button-animate" onclick="showChatbot()">
+    <button class="w-24 h-24 right-button rounded-full text-lg button-animate">
+      Right
+    <button class="w-36 h-12 right-button rounded-full text-lg button-animate">
       Fact-Check
     </button>
-    <div id="chatbotContainer" class="hidden chatbot-container">
-      <h2>Free ChatBot</h2>
-      <div class="form-group">
-        <input
-          type="text"
-          class="form-control"
-          id="userInput"
-          placeholder="Enter your question"
-          onkeypress="handleKeyPress(event)" />
-      </div>
-      <button class="btn btn-success" onclick="sendMessage()">Ask!</button>
-      <div id="response"></div>
-    </div>
   </div>
 
   <script>
+    function loadCategory(category) {
+        const newsContainer = document.getElementById("news-container");
+        newsContainer.innerHTML = "";
+
+        newsCategories[category].forEach(article => {
+            const articleElement = document.createElement("div");
+            articleElement.classList.add("news-article");
+            articleElement.innerHTML = `<h3 onclick="openArticle('${article.file}')">${article.title}</h3><p>${article.preview}</p>`;
+            newsContainer.appendChild(articleElement);
+        });
+    }
+    
+
+    document.getElementById("toggle-google-search").addEventListener("click", function () {
+        let searchContainer = document.getElementById("google-search-container");
+        searchContainer.classList.toggle("show-search");
+    });
     function toggleTheme() {
       const body = document.body;
       const toggleBtn = document.getElementById("themeToggle");
-      
+
       if (body.classList.contains("light-mode")) {
         // Switch to dark mode
         body.classList.remove("light-mode");
@@ -230,92 +153,9 @@
     function showSearchEngine() {
       const leftButton = document.getElementById("leftButton");
       const searchContainer = document.getElementById("searchContainer");
-      
+
       leftButton.style.display = "none";
       searchContainer.classList.remove("hidden");
-    }
-    
-    function showChatbot() {
-      const rightButton = document.getElementById("rightButton");
-      const chatbotContainer = document.getElementById("chatbotContainer");
-      
-      rightButton.style.display = "none";
-      chatbotContainer.classList.remove("hidden");
-    }
-    
-    function handleKeyPress(event) {
-      if (event.key === 'Enter') {
-        sendMessage();
-      }
-    }
-    
-    async function sendMessage() {
-      const input = document.getElementById('userInput').value;
-      const responseDiv = document.getElementById('response');
-      
-      if (!input.trim()) {
-        responseDiv.innerHTML = 'Please enter a message.';
-        return;
-      }
-      
-      responseDiv.innerHTML = 'Loading...';
-      
-      try {
-        // GitHub Models API endpoint
-        const endpoint = "https://models.github.ai/inference";
-        const model = "openai/gpt-4.1";
-        const token = "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"; // Replace with your GitHub token
-        
-        const response = await fetch(`${endpoint}/chat/completions`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            messages: [
-              { 
-                role: "system", 
-                content: "You are a helpful assistant." 
-              },
-              { 
-                role: "user", 
-                content: input.trim() 
-              }
-            ],
-            temperature: 1.0,
-            top_p: 1.0,
-            model: model
-          })
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(`HTTP ${response.status}: ${errorData.error?.message || response.statusText}`);
-        }
-        
-        const data = await response.json();
-        console.log('GitHub Models API Response:', data);
-        
-        if (data.error) {
-          throw new Error(data.error.message || 'API returned an error');
-        }
-        
-        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-          throw new Error('Invalid response format from API');
-        }
-        
-        const messageContent = data.choices[0].message.content || 'No response received.';
-        responseDiv.innerHTML = marked.parse(messageContent);
-        
-        // Clear the input after successful response
-        document.getElementById('userInput').value = '';
-        
-      } catch (error) {
-        console.error('Error details:', error);
-        responseDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
-      }
     }
   </script>
 </body>
