@@ -6,6 +6,7 @@
   <title>Split Button Page with Dark Mode</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
+  <script src='https://cdn.jotfor.ms/s/umd/latest/for-embedded-agent.js'></script>
   <style>
     .button-animate {
       transition: all 0.3s ease;
@@ -117,45 +118,21 @@
 
   <!-- Right Side -->
   <div class="w-1/2 right-side flex items-center justify-center">
-    <button id="rightButton" class="w-36 h-12 right-button rounded-full text-lg button-animate" onclick="showChatbot()">
+    <a id="rightButton" class="modal-019715a4a62a706ea14f55b69e62f7ff5592 w-36 h-12 right-button rounded-full text-lg button-animate flex items-center justify-center cursor-pointer">
       Fact-Check
-    </button>
-    <div id="chatbot-container" class = "hidden w-full max-w-md px-4"></div>
-    <script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
-    <script src="https://karabo.ai/smart-js-chatbot-link/4cbf5384-80ca-4873-a125-4c108935b169/"></script>
-    
+    </a>
   </div>
 
   <script>
-    function loadCategory(category) {
-        const newsContainer = document.getElementById("news-container");
-        newsContainer.innerHTML = "";
-
-        newsCategories[category].forEach(article => {
-            const articleElement = document.createElement("div");
-            articleElement.classList.add("news-article");
-            articleElement.innerHTML = `<h3 onclick="openArticle('${article.file}')">${article.title}</h3><p>${article.preview}</p>`;
-            newsContainer.appendChild(articleElement);
-        });
-    }
-    
-
-    document.getElementById("toggle-google-search").addEventListener("click", function () {
-        let searchContainer = document.getElementById("google-search-container");
-        searchContainer.classList.toggle("show-search");
-    });
-
     function toggleTheme() {
       const body = document.body;
       const toggleBtn = document.getElementById("themeToggle");
 
       if (body.classList.contains("light-mode")) {
-        // Switch to dark mode
         body.classList.remove("light-mode");
         body.classList.add("dark-mode");
         toggleBtn.textContent = "Light Mode";
       } else {
-        // Switch to light mode
         body.classList.remove("dark-mode");
         body.classList.add("light-mode");
         toggleBtn.textContent = "Dark Mode";
@@ -170,13 +147,21 @@
       searchContainer.classList.remove("hidden");
     }
 
-    function showChatbot() {
-      const rightButton = document.getElementById("rightButton");
-      const chatbotContainer = document.getElementById("chatbot-container");
-
-      rightButton.style.display = "none";
-      chatbotContainer.classList.remove("hidden");
-    }
+    // Initialize Dezi modal
+    window.addEventListener("DOMContentLoaded", function () {
+      document.querySelector('.modal-019715a4a62a706ea14f55b69e62f7ff5592').addEventListener('click', function () {
+        window.AgentInitializer.initModalView({
+          rootId: "JotformAgent-019715a4a62a706ea14f55b69e62f7ff5592",
+          formID: "019715a4a62a706ea14f55b69e62f7ff5592",
+          queryParams: ["skipWelcome=1"],
+          domain: "https://eu.jotform.com",
+          isInitialOpen: true,
+          isDraggable: false,
+          variant: false,
+          isVoice: false
+        });
+      });
+    });
   </script>
 </body>
 </html>
