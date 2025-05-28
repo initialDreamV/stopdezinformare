@@ -46,46 +46,6 @@
       color: black;
     }
 
-    /* Dark mode Google Search styling fixes */
-    .dark-mode .gsc-input-box {
-      background-color: #374151 !important;
-      border: 1px solid #6b7280 !important;
-    }
-
-    .dark-mode .gsc-input {
-      background-color: #374151 !important;
-      color: white !important;
-    }
-
-    .dark-mode .gsc-search-button {
-      background-color: #60a5fa !important;
-      border: 1px solid #60a5fa !important;
-    }
-
-    .dark-mode .gsc-results {
-      background-color: #1f2937 !important;
-    }
-
-    .dark-mode .gsc-webResult {
-      background-color: #374151 !important;
-      border: 1px solid #6b7280 !important;
-    }
-
-    .dark-mode .gsc-webResult .gs-title,
-    .dark-mode .gsc-webResult .gs-title * {
-      color: #60a5fa !important;
-    }
-
-    .dark-mode .gsc-webResult .gs-snippet,
-    .dark-mode .gsc-webResult .gs-visibleUrl {
-      color: #d1d5db !important;
-    }
-
-    .dark-mode .gsc-control-cse {
-      background-color: transparent !important;
-      border: none !important;
-    }
-
     /* Light mode styles */
     .light-mode {
       background-color: white;
@@ -158,47 +118,21 @@
 
   <!-- Right Side -->
   <div class="w-1/2 right-side flex items-center justify-center">
-    <button id="rightButton" class="w-36 h-12 right-button rounded-full text-lg button-animate" onclick="showChatbot()">
     <a id="rightButton" class="modal-019715a4a62a706ea14f55b69e62f7ff5592 w-36 h-12 right-button rounded-full text-lg button-animate flex items-center justify-center cursor-pointer">
       Fact-Check
-    </button>
-    <div id="chatbot-container" class = "hidden w-full max-w-md px-4"></div>
-    <script src="https://cdn.jsdelivr.net/npm/marked@3.0.7/marked.min.js"></script>
-    <script src="https://karabo.ai/smart-js-chatbot-link/4cbf5384-80ca-4873-a125-4c108935b169/"></script>
-    
     </a>
   </div>
 
   <script>
-    function loadCategory(category) {
-        const newsContainer = document.getElementById("news-container");
-        newsContainer.innerHTML = "";
-
-        newsCategories[category].forEach(article => {
-            const articleElement = document.createElement("div");
-            articleElement.classList.add("news-article");
-            articleElement.innerHTML = `<h3 onclick="openArticle('${article.file}')">${article.title}</h3><p>${article.preview}</p>`;
-            newsContainer.appendChild(articleElement);
-        });
-    }
-    
-
-    document.getElementById("toggle-google-search").addEventListener("click", function () {
-        let searchContainer = document.getElementById("google-search-container");
-        searchContainer.classList.toggle("show-search");
-    });
-
     function toggleTheme() {
       const body = document.body;
       const toggleBtn = document.getElementById("themeToggle");
 
       if (body.classList.contains("light-mode")) {
-        // Switch to dark mode
         body.classList.remove("light-mode");
         body.classList.add("dark-mode");
         toggleBtn.textContent = "Light Mode";
       } else {
-        // Switch to light mode
         body.classList.remove("dark-mode");
         body.classList.add("light-mode");
         toggleBtn.textContent = "Dark Mode";
@@ -213,13 +147,6 @@
       searchContainer.classList.remove("hidden");
     }
 
-    function showChatbot() {
-      const rightButton = document.getElementById("rightButton");
-      const chatbotContainer = document.getElementById("chatbot-container");
-
-      rightButton.style.display = "none";
-      chatbotContainer.classList.remove("hidden");
-    }
     // Initialize Dezi modal
     window.addEventListener("DOMContentLoaded", function () {
       document.querySelector('.modal-019715a4a62a706ea14f55b69e62f7ff5592').addEventListener('click', function () {
