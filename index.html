@@ -32,7 +32,7 @@
 
     .dark-mode .left-button {
       background-color: #60a5fa;
-      color: black;
+      color: rgb(255, 255, 255);
     }
 
     .dark-mode .right-button {
@@ -43,7 +43,7 @@
 
     .dark-mode .toggle-button {
       background-color: white;
-      color: black;
+      color: rgb(255, 255, 255);
     }
 
     /* Dark mode Google Search styling fixes */
@@ -172,6 +172,59 @@
       overflow: hidden;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     }
+
+    /* Title screen styles */
+    #titleScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1s ease-out;
+    }
+
+    .title-text {
+      font-size: 4rem;
+      font-weight: bold;
+      text-align: center;
+      animation: titlePulse 2s ease-in-out;
+    }
+
+    @keyframes titlePulse {
+      0% { opacity: 0; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Main content initially hidden */
+    #mainContent {
+      opacity: 0;
+      transition: opacity 1s ease-in;
+    }
+
+    .fade-out {
+      opacity: 0 !important;
+    }
+
+    .fade-in {
+      opacity: 1 !important;
+    }
+
+    /* Dark mode title styles */
+    .dark-mode .title-text {
+      color: white;
+      text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+    }
+
+    /* Light mode title styles */
+    .light-mode .title-text {
+      color: #111827;
+      text-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+    }
   </style>
 </head>
 
@@ -189,10 +242,34 @@
   <div class="w-1/2 left-side flex items-center justify-center">
     <button id="leftButton" class="w-36 h-12 left-button rounded-full text-lg button-animate" onclick="showSearchEngine()">
       Search
+  <!-- Title Screen -->
+  <div id="titleScreen" class="light-mode">
+    <h1 class="title-text">Stop Dezinformare!</h1>
+  </div>
+
+  <!-- Main Content -->
+  <div id="mainContent" class="w-full h-full flex">
+    <!-- Toggle Button -->
+    <button
+      id="themeToggle"
+      class="absolute top-4 right-4 px-4 py-2 rounded-full toggle-button"
+      onclick="toggleTheme()"
+    >
+      Dark Mode
     </button>
     <div id="searchContainer" class="hidden w-full max-w-md px-4">
       <script async src="https://cse.google.com/cse.js?cx=27ec22407a7c84408"></script>
       <div class="gcse-search" data-resultsUrl="" data-newWindow="false" data-linktarget="_self"></div>
+
+    <!-- Left Side -->
+    <div class="w-1/2 left-side flex items-center justify-center">
+      <button id="leftButton" class="w-36 h-12 left-button rounded-full text-lg button-animate" onclick="showSearchEngine()">
+        Search
+      </button>
+      <div id="searchContainer" class="hidden w-full max-w-md px-4">
+        <script async src="https://cse.google.com/cse.js?cx=27ec22407a7c84408"></script>
+        <div class="gcse-search" data-resultsUrl="" data-newWindow="false" data-linktarget="_self"></div>
+      </div>
     </div>
   </div>
 
@@ -201,20 +278,48 @@
     <a id="rightButton" class="modal-019715a4a62a706ea14f55b69e62f7ff5592 w-36 h-12 right-button rounded-full text-lg button-animate flex items-center justify-center cursor-pointer">
       Fact-Check
     </a>
+    <!-- Right Side -->
+    <div class="w-1/2 right-side flex items-center justify-center">
+      <a id="rightButton" class="modal-019715a4a62a706ea14f55b69e62f7ff5592 w-36 h-12 right-button rounded-full text-lg button-animate flex items-center justify-center cursor-pointer">
+        Fact-Check
+      </a>
+    </div>
   </div>
 
   <script>
+    // Title screen fade effect
+    window.addEventListener("DOMContentLoaded", function () {
+      const titleScreen = document.getElementById("titleScreen");
+      const mainContent = document.getElementById("mainContent");
+      
+      // Show title for 3 seconds, then fade out
+      setTimeout(() => {
+        titleScreen.classList.add("fade-out");
+        
+        // After fade out completes, show main content
+        setTimeout(() => {
+          titleScreen.style.display = "none";
+          mainContent.classList.add("fade-in");
+        }, 1000); // Wait for fade out transition
+      }, 3000); // Show title for 3 seconds
+    });
+
     function toggleTheme() {
       const body = document.body;
+      const titleScreen = document.getElementById("titleScreen");
       const toggleBtn = document.getElementById("themeToggle");
 
       if (body.classList.contains("light-mode")) {
         body.classList.remove("light-mode");
         body.classList.add("dark-mode");
+        titleScreen.classList.remove("light-mode");
+        titleScreen.classList.add("dark-mode");
         toggleBtn.textContent = "Light Mode";
       } else {
         body.classList.remove("dark-mode");
         body.classList.add("light-mode");
+        titleScreen.classList.remove("dark-mode");
+        titleScreen.classList.add("light-mode");
         toggleBtn.textContent = "Dark Mode";
       }
     }
