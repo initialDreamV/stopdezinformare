@@ -32,18 +32,18 @@
 
     .dark-mode .left-button {
       background-color: #60a5fa;
-      color: rgb(255, 255, 255);
+      color: black;
     }
 
     .dark-mode .right-button {
       background-color: #4ade80;
       background-color: #4a59de;
-      color: rgb(255, 255, 255);
+      color: black;
     }
 
     .dark-mode .toggle-button {
       background-color: white;
-      color: rgb(255, 255, 255);
+      color: black;
     }
 
     /* Dark mode Google Search styling fixes */
@@ -229,19 +229,6 @@
 </head>
 
 <body class="h-screen m-0 flex light-mode">
-  <!-- Toggle Button -->
-  <button
-    id="themeToggle"
-    class="absolute top-4 right-4 px-4 py-2 rounded-full toggle-button"
-    onclick="toggleTheme()"
-  >
-    Dark Mode
-  </button>
-
-  <!-- Left Side -->
-  <div class="w-1/2 left-side flex items-center justify-center">
-    <button id="leftButton" class="w-36 h-12 left-button rounded-full text-lg button-animate" onclick="showSearchEngine()">
-      Search
   <!-- Title Screen -->
   <div id="titleScreen" class="light-mode">
     <h1 class="title-text">Stop Dezinformare!</h1>
@@ -257,9 +244,6 @@
     >
       Dark Mode
     </button>
-    <div id="searchContainer" class="hidden w-full max-w-md px-4">
-      <script async src="https://cse.google.com/cse.js?cx=27ec22407a7c84408"></script>
-      <div class="gcse-search" data-resultsUrl="" data-newWindow="false" data-linktarget="_self"></div>
 
     <!-- Left Side -->
     <div class="w-1/2 left-side flex items-center justify-center">
@@ -271,13 +255,7 @@
         <div class="gcse-search" data-resultsUrl="" data-newWindow="false" data-linktarget="_self"></div>
       </div>
     </div>
-  </div>
 
-  <!-- Right Side -->
-  <div class="w-1/2 right-side flex items-center justify-center">
-    <a id="rightButton" class="modal-019715a4a62a706ea14f55b69e62f7ff5592 w-36 h-12 right-button rounded-full text-lg button-animate flex items-center justify-center cursor-pointer">
-      Fact-Check
-    </a>
     <!-- Right Side -->
     <div class="w-1/2 right-side flex items-center justify-center">
       <a id="rightButton" class="modal-019715a4a62a706ea14f55b69e62f7ff5592 w-36 h-12 right-button rounded-full text-lg button-animate flex items-center justify-center cursor-pointer">
